@@ -1,0 +1,58 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Ensures the workflow has write permissions
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Get latest tag
+        id: get_latest_tag
+        run: |
+          TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          if [ -z "$TAG" ]; then
+            TAG="v0.0.0"
+          fi
+          echo "Latest tag: $TAG"
+          echo "LATEST_TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Increment version number
+        id: increment_version
+        run: |
+          TAG=${{ env.LATEST_TAG }}
+          TAG=${TAG#"v"}
+          IFS='.' read -r -a parts <<< "$TAG"
+          PATCH=${parts[2]}
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="v${parts[0]}.${parts[1]}.$NEW_PATCH"
+          echo "New version: $NEW_VERSION"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Create new tag
+        run: |
+          git tag ${{ env.NEW_VERSION }}
+          git push origin ${{ env.NEW_VERSION }}
+
+      - name: Create a new release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.NEW_VERSION }}
+          release_name: Release ${{ env.NEW_VERSION }}
+          body: "Automated release created for commit ${{ github.sha }}."
+          draft: false
+          prerelease: false
