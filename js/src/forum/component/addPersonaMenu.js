@@ -19,6 +19,7 @@ export const loginUser = (username) => {
     window.location.reload();
   }).catch(error => {
     console.error('Login failed', error);
+    alert("Login failed");
     // Handle login error, e.g., show an error message to the user
   });
 }
@@ -35,8 +36,8 @@ export const addNewUser = () => {
   }).then(response => {
     window.location.reload();
   }).catch(error => {
-    alert(error);
-    console.error('Login failed', error);
+    console.log(error);
+    console.error('Register failed');
   });
 }
 

@@ -36,6 +36,10 @@ class PersonaRegisterController implements RequestHandlerInterface
     }
 
     function createNewUser($username, $email, $password) {
+
+        $user = User::where('username', $username)->first();
+        if($user) {return false;}
+
         $app = app(); // Get Flarum application instance
 
         // Create new user
