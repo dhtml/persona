@@ -1,7 +1,12 @@
 dhtml-persona:
   # For more details on the format
   # Checkout https://docs.flarum.org/extend/i18n/#appendix-a-standard-key-format
-  admin:
-    my_cool_key: My Cool Key
-
   forum:
+    persona: Persona
+  admin:
+    settings:
+      pattern1: Domain pattern 1
+      pattern2: Domain pattern 2
+      pattern3: Domain pattern 3
+      plugin:
+        help: This determines the email account domain patterns of the filter
