@@ -9,6 +9,7 @@ export const loginUser = (username) => {
   if(username=='Add New User') {
     return addNewUser();
   }
+
   return app.request({
     method: 'POST',
     url: `${app.forum.attribute('baseUrl')}/api/persona-login`,
