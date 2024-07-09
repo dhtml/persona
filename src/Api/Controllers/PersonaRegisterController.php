@@ -107,8 +107,13 @@ class PersonaRegisterController implements RequestHandlerInterface
         $statusCode = 200;
         $response = [];
 
+        $session = $request->getAttribute('session');
+
         try {
             $newUser = $this->createNewUser($username, $email, $password);
+
+            $sess = $this->authenticateById($username, $session);
+
             $response['message'] = "Success";
         } catch (ValidationException $e) {
             $statusCode = 401;
@@ -123,6 +128,32 @@ class PersonaRegisterController implements RequestHandlerInterface
 
 
         return new JsonResponse($response, $statusCode);
+    }
+
+
+    public function authenticateById($username, $session)
+    {
+        try {
+
+            //only attempt to login accounts that fall into pattern
+            foreach ($this->patterns as $pattern) {
+                if(empty($pattern)) continue;
+                $user = User::where('username', $username)->where('email', 'like', "%{$pattern}")->first();
+                if($user) {break;}
+            }
+
+
+            if (!$user) {
+                return false;
+            }
+            $token = $this->getToken($user);
+            $access_token = SessionAccessToken::findValid($token);
+            resolve(SessionAuthenticator::class)->logIn($session, $access_token);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
 }
