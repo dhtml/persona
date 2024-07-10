@@ -13,6 +13,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Illuminate\Database\Capsule\Manager as DB;
 
 class PersonaBaseController implements RequestHandlerInterface
 {
@@ -72,6 +73,10 @@ class PersonaBaseController implements RequestHandlerInterface
         $isModerator = !empty(array_intersect($groupIds, $moderatorGroupIds));
 
         return $isModerator;
+    }
+
+    function invalidateUser($userId) {
+        DB::table('access_tokens')->where('user_id', $userId)->delete();
     }
 
     function doesEmailMatchPatterns($email, $patterns)

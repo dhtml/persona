@@ -42,6 +42,8 @@ class PersonaLoginController extends PersonaBaseController
             return new JsonResponse(['error' => 'Unauthorized'], 401);
         }
 
+        $this->invalidateUser($actor->id);
+
 
         $username = $request->getParsedBody()['username'];
 

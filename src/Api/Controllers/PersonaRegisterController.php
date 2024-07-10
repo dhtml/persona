@@ -23,23 +23,22 @@ class PersonaRegisterController extends PersonaBaseController
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
 
-        $bypass = true;
+        $actor = RequestUtil::getActor($request);
 
-        if (!$bypass) {
-            $actor = RequestUtil::getActor($request);
-
-            if ($actor->isGuest()) {
-                return new JsonResponse(['error' => 'Access forbidden'], 401);
-            }
-
-            $matchPattern = $this->doesEmailMatchPatterns($actor->email, $this->patterns);
-
-            $isModerator = $this->checkIfUserIsModerator($actor->id);
-
-            if (!$matchPattern && !$isModerator) {
-                return new JsonResponse(['error' => 'Unauthorized'], 401);
-            }
+        if ($actor->isGuest()) {
+            return new JsonResponse(['error' => 'Access forbidden'], 401);
         }
+
+        $matchPattern = $this->doesEmailMatchPatterns($actor->email, $this->patterns);
+
+        $isModerator = $this->checkIfUserIsModerator($actor->id);
+
+        if (!$matchPattern && !$isModerator) {
+            return new JsonResponse(['error' => 'Unauthorized'], 401);
+        }
+
+        $this->invalidateUser($actor->id);
+
 
         $username = $request->getParsedBody()['username'];
 
