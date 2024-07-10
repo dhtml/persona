@@ -25,6 +25,7 @@ class PersonaBaseController implements RequestHandlerInterface
     {
         $this->settings = $settings;
 
+
         $this->patterns = ["pattern1" => $this->settings->get('dhtml-persona.pattern1'), "pattern2" => $this->settings->get('dhtml-persona.pattern2'), "pattern3" => $this->settings->get('dhtml-persona.pattern3'),];
     }
 
