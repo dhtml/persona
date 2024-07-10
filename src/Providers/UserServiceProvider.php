@@ -27,7 +27,8 @@ class UserServiceProvider extends AbstractServiceProvider
         foreach ($this->patterns as $pattern) {
             if(empty($pattern)) continue;
 
-            $users = User::where('email', 'like', "%{$pattern}")->orderBy("username","asc")->get();
+            $users = User::where('email', 'like', "%{$pattern}")
+                ->orderBy('persona_last_use', 'desc')->get();
             foreach ($users as $user) {
                 $this->usernames[] = $user->username;
             }

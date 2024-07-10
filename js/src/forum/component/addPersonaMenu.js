@@ -63,7 +63,11 @@ export default function () {
         const groupId = group.data.id;
         return groupId === '1' || groupId === '4';
       });
+    } else {
+      return; //no point
     }
+
+    const _username = user.username();
 
     const patterns = {
       pattern1: app.forum.attribute('domainpattern1'),
@@ -88,6 +92,7 @@ export default function () {
     for (let i = 0; i < decodedArray.length; i++) {
       const user = decodedArray[i];
 
+      if(_username == user) continue;
 
       users.push(
         <Button icon={'fas fa-user'} onclick={() => {loginUser(user);}}
