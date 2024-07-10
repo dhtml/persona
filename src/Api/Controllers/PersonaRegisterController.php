@@ -23,6 +23,11 @@ class PersonaRegisterController extends PersonaBaseController
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
 
+        $username = trim($request->getParsedBody()['username']);
+        if ($username=="") {
+            return new JsonResponse(['error' => 'No username'], 404);
+        }
+
         $actor = RequestUtil::getActor($request);
 
         if ($actor->isGuest()) {
@@ -40,7 +45,6 @@ class PersonaRegisterController extends PersonaBaseController
         $this->invalidateUser($actor->id);
 
 
-        $username = $request->getParsedBody()['username'];
 
         $email = $username . $this->patterns['pattern1'];
         $password = md5(mt_rand() . mt_rand());

@@ -27,6 +27,9 @@ export const loginUser = (username) => {
 
 export const addNewUser = () => {
   let username = prompt("Enter username","");
+  username = username.trim();
+
+  if(username=="") {return;}
 
   return app.request({
     method: 'POST',

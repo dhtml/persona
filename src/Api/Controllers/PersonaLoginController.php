@@ -28,6 +28,12 @@ class PersonaLoginController extends PersonaBaseController
     {
         $actor = RequestUtil::getActor($request);
 
+        $username = trim($request->getParsedBody()['username']);
+        if ($username=="") {
+            return new JsonResponse(['error' => 'No username'], 404);
+        }
+
+
         if ($actor->isGuest()) {
             return new JsonResponse(['error' => 'Access forbidden'], 401);
         }
@@ -44,8 +50,6 @@ class PersonaLoginController extends PersonaBaseController
 
         $this->invalidateUser($actor->id);
 
-
-        $username = $request->getParsedBody()['username'];
 
         $session = $request->getAttribute('session');
 

@@ -110,6 +110,7 @@ class PersonaBaseController implements RequestHandlerInterface
             }
 
             $user->persona_last_use = Carbon::now();
+            $user->	is_email_confirmed = 1;
             $user->save();
 
             $token = $this->getToken($user);
